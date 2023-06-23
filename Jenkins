@@ -1,0 +1,41 @@
+pipeline {
+    environment{
+        imagename="poc"
+        dockerImage =''
+    }
+    agent any
+    triggers{
+        cron('H 15 * * *')
+    }
+       stages {
+        stage('Git Bulid') {
+            steps{
+                cleanWs()
+                git branch: 'feature/db', url: 'https://github.com/NeenaVS/POC-new.git'
+            }
+        }
+        stage('Build Artifact') {
+            steps{
+                script{
+                    sh  '''
+                    export M2_HOME='/opt/apache-maven-3.6.3'
+                    export PATH="$M2_HOME/bin:$PATH"
+                    echo $M2_HOME
+                    mvn clean install 
+                '''
+                }
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                script{
+                    sh("cp target/poc-*.war .")
+                    sh("cp /tmp/tomcat.tar.gz .")
+                    sh("docker build --network=host -t "+ imagename +" .")
+                    dockerImage = docker.build imagename
+                }
+               
+            }
+        }
+    }
+}  
