@@ -6,7 +6,7 @@ RUN mkdir -p "$CATALINA_HOME"
 WORKDIR $CATALINA_HOME
 
 RUN apt-get update
-RUN apt-get install vim wget zip gettext
+RUN apt-get install vim wget zip gettext -y
 
 ENV TOMCAT_VERSION 10.1.9
 COPY tomcat.tar.gz .
