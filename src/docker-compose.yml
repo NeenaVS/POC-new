@@ -1,0 +1,6 @@
+version: '2'
+services:
+  tomcat:
+    image: neenahub/poc_1
+    ports:
+      - "8000:8080"
